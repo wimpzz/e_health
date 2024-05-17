@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../firebase_auth_service.dart';
+import 'home_screen.dart';
 import 'login_screen.dart';
-import 'welcome_email.dart';
 
 class SignUpEmailScreen extends StatelessWidget {
   const SignUpEmailScreen({Key? key}) : super(key: key);
@@ -264,25 +264,22 @@ class _SignUpFormState extends State<SignUpForm> {
                       _lastNameController.text.trim(),
                       _usernameController.text.trim(),
                     );
-                    // If sign up successful, show a success dialog
-                    //_showAlertDialog(context, 'Success', 'Sign up successful!');
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => WelcomeScreenEmail(
+                        builder: (context) => HomeScreen(
+                          email: _emailController.text.trim(),
                           firstName: _firstNameController.text.trim(),
                           lastName: _lastNameController.text.trim(),
-                          username: _usernameController.text.trim(),
+                          userName: _usernameController.text.trim(),
                         ),
                       ),
                     );
                   } catch (_) {
-                    // If sign up fails, show a generic error dialog
                     _showAlertDialog(context, 'Sign Up Failed',
                         'Sign up failed. Please try again.');
                   }
                 } else if (!_acceptTerms) {
-                  // If terms and conditions are not accepted, show an error dialog
                   _showAlertDialog(context, 'Error',
                       'You must accept the terms and conditions to sign up.');
                 }
@@ -305,14 +302,13 @@ class _SignUpFormState extends State<SignUpForm> {
                 text: 'Already have an account? ',
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.black,
                   fontFamily: 'Poppins',
+                  color: Colors.black,
                 ),
-                children: <TextSpan>[
+                children: [
                   TextSpan(
                     text: 'Log In',
                     style: TextStyle(
-                      fontSize: 16,
                       color: Colors.teal,
                       fontFamily: 'Poppins',
                     ),

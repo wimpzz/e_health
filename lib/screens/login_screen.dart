@@ -1,8 +1,8 @@
+import 'package:e_health/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import '../firebase_auth_service.dart';
 import 'signup_screen.dart';
 import 'main_screen.dart';
-import 'welcome_google.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -177,16 +177,24 @@ class _LoginFormState extends State<LoginForm> {
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
                 try {
-                  await _authService.signInWithEmailPassword(
+                  final result = await _authService.signInWithEmailPassword(
                     _emailController.text.trim(),
                     _passwordController.text.trim(),
                   );
 
-                  // Navigate to MainScreen after successful login
+                  final firstName = result['firstName'] as String;
+
+                  // Navigate to HomeScreen after successful login
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => WelcomeScreenGoogle()),
+                      builder: (context) => HomeScreen(
+                        firstName: firstName,
+                        email: '',
+                        userName: '',
+                        lastName: '',
+                      ),
+                    ),
                   );
                 } catch (_) {
                   // Handle sign-in errors
@@ -205,7 +213,6 @@ class _LoginFormState extends State<LoginForm> {
             ),
             style: ElevatedButton.styleFrom(
               minimumSize: Size(double.infinity, 50),
-
               backgroundColor: Colors.teal, // Background color
             ),
           ),
@@ -215,10 +222,16 @@ class _LoginFormState extends State<LoginForm> {
               try {
                 final user = await _authService.signInWithGoogle();
                 if (user != null) {
+                  // Optionally, you can also fetch the first name from Firestore if needed
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => WelcomeScreenGoogle(),
+                      builder: (context) => HomeScreen(
+                        email: user.email ?? '',
+                        userName: '',
+                        firstName: '',
+                        lastName: '',
+                      ),
                     ),
                   );
                 } else {

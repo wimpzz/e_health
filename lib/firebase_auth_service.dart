@@ -22,7 +22,7 @@ class FirebaseAuthService {
       }
     } catch (e) {
       print('Failed to get user data: $e');
-      throw Exception('Failed to get user data: $e');
+      throw Exception('Failed to get user data');
     }
   }
 
@@ -39,19 +39,27 @@ class FirebaseAuthService {
           userCredential.user!.uid, email, firstName, lastName, userName);
     } catch (e) {
       print('Failed to sign up: $e');
-      throw Exception('Failed to sign up: $e');
+      throw Exception('Failed to sign up');
     }
   }
 
-  Future<void> signInWithEmailPassword(String email, String password) async {
+  Future<Map<String, dynamic>> signInWithEmailPassword(
+      String email, String password) async {
     try {
-      await _auth.signInWithEmailAndPassword(
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      // Retrieve user data from Firestore
+      Map<String, dynamic> userData =
+          await getUserData(userCredential.user!.uid);
+
+      // Return a map containing user object and user's firstName
+      return {'user': userCredential.user, 'firstName': userData['FirstName']};
     } catch (e) {
       print('Failed to sign in: $e');
-      throw Exception('Failed to sign in: $e');
+      throw Exception('Failed to sign in');
     }
   }
 
@@ -92,7 +100,7 @@ class FirebaseAuthService {
       return userCredential.user;
     } catch (e) {
       print('Failed to sign in with Google: $e');
-      throw Exception('Failed to sign in with Google: $e');
+      throw Exception('Failed to sign in with Google');
     }
   }
 
@@ -108,7 +116,7 @@ class FirebaseAuthService {
       });
     } catch (e) {
       print('Failed to add user to Firestore: $e');
-      throw Exception('Failed to add user to Firestore: $e');
+      throw Exception('Failed to add user to Firestore');
     }
   }
 
@@ -118,7 +126,7 @@ class FirebaseAuthService {
       await _googleSignIn.signOut(); // Sign out Google user as well
     } catch (e) {
       print('Failed to sign out: $e');
-      throw Exception('Failed to sign out: $e');
+      throw Exception('Failed to sign out');
     }
   }
 }

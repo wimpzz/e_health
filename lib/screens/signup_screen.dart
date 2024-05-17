@@ -1,17 +1,16 @@
-import 'package:e_health/screens/main_screen.dart'; // Import your MainScreen here
-import 'package:e_health/screens/welcome_google.dart';
 import 'package:flutter/material.dart';
-import '../firebase_auth_service.dart'; // Ensure you import your FirebaseAuthService here
+import '../firebase_auth_service.dart';
 import 'login_screen.dart';
+import 'main_screen.dart';
 import 'signup_email.dart';
+import '../screens/home_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _authService =
-        FirebaseAuthService(); // Instance of FirebaseAuthService
+    final _authService = FirebaseAuthService();
 
     return Scaffold(
       appBar: AppBar(
@@ -69,11 +68,12 @@ class SignUpScreen extends StatelessWidget {
                   try {
                     final user = await _authService.signInWithGoogle();
                     if (user != null) {
-                      // Navigate to the WelcomeScreenGoogle after successful sign-in
+                      // Navigate to the HomeScreen after successful sign-in
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => WelcomeScreenGoogle(),
+                          builder: (context) => HomeScreen(
+                              email: user.email!, userName: '', firstName: '', lastName: '',), // Pass email as a parameter
                         ),
                       );
                     } else {
