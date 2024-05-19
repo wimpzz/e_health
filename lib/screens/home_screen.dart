@@ -1,17 +1,18 @@
+import 'package:e_health/screens/membership.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:e_health/firebase_auth_service.dart';
-import 'login_screen.dart';
 import 'navbar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
-    Key? key,
+    super.key,
     required this.email,
     required this.userName,
     required this.firstName,
     required this.lastName,
-  }) : super(key: key);
+    required String phoneNumber,
+    required String birthdate,
+    required String sex,
+  });
 
   final String email;
   final String userName;
@@ -23,93 +24,28 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<HomeScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseAuthService _authService = FirebaseAuthService();
-
-  String? _displayName;
-  String? _email;
-  String? _photoURL;
 
   @override
   void initState() {
     super.initState();
-    _getUserInfo();
-  }
-
-  Future<void> _getUserInfo() async {
-    try {
-      final user = _auth.currentUser;
-      if (user != null) {
-        setState(() {
-          _email = user.email;
-          _photoURL = user.photoURL;
-        });
-      }
-    } catch (e) {
-      print('Failed to fetch user info: $e');
-    }
-  }
-
-  Future<void> _signOut(BuildContext context) async {
-    try {
-      await _authService.signOut();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-      );
-    } catch (e) {
-      print('Failed to sign out: $e');
-    }
-  }
-
-  void _showUserDetails(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          padding: EdgeInsets.all(16.0),
-          constraints: BoxConstraints(maxHeight: 200), // Set maximum height
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // if (_photoURL != null)
-              //   CircleAvatar(backgroundImage: NetworkImage(_photoURL!)),
-              CircleAvatar(
-                backgroundImage: _photoURL != null
-                    ? NetworkImage(_photoURL!)
-                    : null,
-                child: _photoURL == null ? Icon(Icons.account_circle) : null,
-              ),
-              Text('First Name: ${widget.firstName}'), // Display the first name
-              if (_displayName != null) Text('Display Name: $_displayName'),
-              if (_email != null) Text('Email: $_email'),
-              ElevatedButton(
-                onPressed: () => _signOut(context),
-                child: Text('Logout'),
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text(
+          'Welcome to E-Health',
+          style: TextStyle(fontFamily: 'Poppins'),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(height: 40), // Add some space from the top
-            Text(
-              'Welcome to E-Health',
-              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.left,
-            ),
-            SizedBox(height: 20),
+            const SizedBox(height: 40),
             Row(
               children: [
                 Expanded(
@@ -118,18 +54,21 @@ class _WelcomeScreenState extends State<HomeScreen> {
                     child: Card(
                       child: InkWell(
                         onTap: () {
-                          // Handle GP Now card tap
+                          //func
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
+                        child: const Padding(
+                          padding: EdgeInsets.all(16.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(Icons.medical_services, size: 50),
                               SizedBox(height: 10),
-                              Text('See a GP Now',
-                                  style: TextStyle(fontSize: 18),
-                                  textAlign: TextAlign.center),
+                              Text(
+                                'See a GP Now',
+                                style: TextStyle(
+                                    fontSize: 18, fontFamily: 'Poppins'),
+                                textAlign: TextAlign.center,
+                              ),
                             ],
                           ),
                         ),
@@ -137,24 +76,25 @@ class _WelcomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                SizedBox(width: 10), // Add some space between the cards
+                const SizedBox(width: 10),
                 Expanded(
                   child: SizedBox(
                     height: 150,
                     child: Card(
                       child: InkWell(
                         onTap: () {
-                          // Handle Book an appointment card tap
+                          //func
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
+                        child: const Padding(
+                          padding: EdgeInsets.all(16.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(Icons.calendar_today, size: 50),
                               SizedBox(height: 10),
                               Text('Book an appointment',
-                                  style: TextStyle(fontSize: 18),
+                                  style: TextStyle(
+                                      fontSize: 18, fontFamily: 'Poppins'),
                                   textAlign: TextAlign.center),
                             ],
                           ),
@@ -165,21 +105,23 @@ class _WelcomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
-            Row(
+            const SizedBox(height: 20),
+            const Row(
               children: [
                 Expanded(
                   child: Text(
                     'Virtual Consultant',
-                    style:
-                        TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Poppins'),
                   ),
                 ),
-                Icon(Icons.arrow_forward), // Arrow icon
+                Icon(Icons.arrow_forward),
               ],
             ),
-            SizedBox(height: 10),
-            Container(
+            const SizedBox(height: 10),
+            SizedBox(
               height: 150,
               child: ListView(
                 scrollDirection: Axis.horizontal,
@@ -190,45 +132,75 @@ class _WelcomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Membership and Health Plan',
-              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Poppins'),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Flexible(
               child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Premium Health Plan',
-                        style: TextStyle(
-                            fontSize: 20.0, fontWeight: FontWeight.bold),
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(12.0),
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius:
+                        BorderRadius.circular(12.0),
+                    image: DecorationImage(
+                      image: const AssetImage(
+                        'assets/sample-health-card.png', 
                       ),
-                      SizedBox(height: 10),
-                      Text(
-                        'Get the best health care services.',
-                        style: TextStyle(fontSize: 16.0),
+                      fit: BoxFit.cover,
+                      colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.8),
+                        BlendMode
+                            .darken, 
                       ),
-                      SizedBox(height: 10),
-                      Image.network(
-                          'https://via.placeholder.com/150', // Placeholder image URL
-                          height: 10, // Set the height of the image
-                          fit: BoxFit.cover), // Set the fit of the image
-                      Spacer(),
-                      Align(
-                        alignment: Alignment.bottomLeft,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // Handle button tap
-                          },
-                          child: Text('Join Now'),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(26.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Link your Corporate Membership',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Poppins',
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 10),
+                        const Text(
+                          'Or Subscribe to one of our plans to enjoy exclusive benefits.',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.white, 
+                          ),
+                        ),
+                        const Spacer(),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MembershipScreen()),
+                              );
+                            },
+                            child: const Text('Continue'),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -236,12 +208,13 @@ class _WelcomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showUserDetails(context),
-        tooltip: 'User Details',
-        child: Icon(Icons.account_circle),
-      ),
-      bottomNavigationBar: NavBar(), // Add the NavBar widget here
+      bottomNavigationBar: NavBar(
+        currentIndex: 0,
+        email: '',
+        userName: '',
+        firstName: '',
+        lastName: '',
+      ), // Add the NavBar widget here
     );
   }
 
@@ -254,9 +227,13 @@ class _WelcomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 50),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(title,
-                style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontFamily: 'Poppins',
+                ),
+                textAlign: TextAlign.center),
           ],
         ),
       ),

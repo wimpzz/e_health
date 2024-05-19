@@ -64,6 +64,8 @@ flutter:
   assets:
     - assets/logo.png
     - assets/google.png
+    - assets/sample-health-card.png
+    - assets/health-bundle.jpg
 
   fonts:
     - family: Poppins

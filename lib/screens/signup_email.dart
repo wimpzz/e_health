@@ -21,11 +21,13 @@ class SignUpEmailScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SignUpForm(),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SignUpForm(),
+            ],
+          ),
         ),
       ),
     );
@@ -48,7 +50,10 @@ class _SignUpFormState extends State<SignUpForm> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-  final _authService = FirebaseAuthService(); // Instance of FirebaseAuthService
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _birthdateController = TextEditingController();
+  final TextEditingController _sexController = TextEditingController();
+  final _authService = FirebaseAuthService();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _acceptTerms = false;
@@ -66,6 +71,70 @@ class _SignUpFormState extends State<SignUpForm> {
                 Navigator.of(context).pop();
               },
               child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showTermsAndConditionsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Terms and Conditions'),
+          content: SingleChildScrollView(
+            child: Text(
+              'By using this app, you agree to the following terms and conditions:\n\n'
+              'You will not use this app for any illegal or unauthorized purpose.\n'
+              'You will not attempt to gain unauthorized access to any part of the app.\n'
+              'You will not use the app to harass, abuse, or harm others.\n'
+              'You will be solely responsible for any consequences that arise from your use of the app.\n\n'
+              'These terms and conditions may be subject to change without notice.',
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showPrivacyPolicyDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Privacy Policy'),
+          content: SingleChildScrollView(
+            child: Text(
+              'Our Privacy Policy explains how we collect, use, and protect your personal information when you use our app.\n\n'
+              '1. Information Collection and Use:\n'
+              'We collect information you provide when you register an account, use our services, or contact us.\n\n'
+              '2. Information Sharing:\n'
+              'We do not share your personal information with third parties except as described in this Privacy Policy.\n\n'
+              '3. Data Security:\n'
+              'We take appropriate measures to protect your personal information from unauthorized access or disclosure.\n\n'
+              '4. Changes to This Privacy Policy:\n'
+              'We may update our Privacy Policy from time to time. You are advised to review this Privacy Policy periodically for any changes.\n\n'
+              'By using our app, you agree to the collection and use of information in accordance with this Privacy Policy.',
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
             ),
           ],
         );
@@ -128,6 +197,41 @@ class _SignUpFormState extends State<SignUpForm> {
               }
               if (value.length < 3) {
                 return 'Username must be at least 3 characters long';
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 20),
+          TextFormField(
+            controller: _phoneNumberController,
+            decoration: inputDecoration.copyWith(labelText: 'Phone Number'),
+            keyboardType: TextInputType.phone,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your phone number';
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 20),
+          TextFormField(
+            controller: _birthdateController,
+            decoration: inputDecoration.copyWith(labelText: 'Birthdate'),
+            keyboardType: TextInputType.datetime,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your birthdate';
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 20),
+          TextFormField(
+            controller: _sexController,
+            decoration: inputDecoration.copyWith(labelText: 'Sex'),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your sex';
               }
               return null;
             },
@@ -226,14 +330,14 @@ class _SignUpFormState extends State<SignUpForm> {
                     ),
                     children: [
                       TextSpan(
-                          text:
-                              'By using E-Health Anywhere, you agree to our '),
+                        text: 'By using E-Health Anywhere, you agree to our ',
+                      ),
                       TextSpan(
                         text: 'Terms and Conditions',
                         style: TextStyle(color: Colors.teal),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            // Implement navigation to Terms and Conditions screen
+                            _showTermsAndConditionsDialog(context);
                           },
                       ),
                       TextSpan(text: ' and '),
@@ -242,7 +346,7 @@ class _SignUpFormState extends State<SignUpForm> {
                         style: TextStyle(color: Colors.teal),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            // Implement navigation to Privacy Policy screen
+                            _showPrivacyPolicyDialog(context);
                           },
                       ),
                     ],
@@ -263,6 +367,9 @@ class _SignUpFormState extends State<SignUpForm> {
                       _firstNameController.text.trim(),
                       _lastNameController.text.trim(),
                       _usernameController.text.trim(),
+                      _phoneNumberController.text.trim(),
+                      _birthdateController.text.trim(),
+                      _sexController.text.trim(),
                     );
                     Navigator.pushReplacement(
                       context,
@@ -272,6 +379,9 @@ class _SignUpFormState extends State<SignUpForm> {
                           firstName: _firstNameController.text.trim(),
                           lastName: _lastNameController.text.trim(),
                           userName: _usernameController.text.trim(),
+                          phoneNumber: _phoneNumberController.text.trim(),
+                          birthdate: _birthdateController.text.trim(),
+                          sex: _sexController.text.trim(),
                         ),
                       ),
                     );
@@ -280,7 +390,7 @@ class _SignUpFormState extends State<SignUpForm> {
                         'Sign up failed. Please try again.');
                   }
                 } else if (!_acceptTerms) {
-                  _showAlertDialog(context, 'Error',
+                  _showAlertDialog(context, 'Sign Up Failed',
                       'You must accept the terms and conditions to sign up.');
                 }
               },
@@ -291,7 +401,7 @@ class _SignUpFormState extends State<SignUpForm> {
               ),
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(double.infinity, 50),
-                backgroundColor: Colors.teal, // Background color
+                backgroundColor: Colors.teal,
               ),
             ),
           ),

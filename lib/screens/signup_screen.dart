@@ -3,7 +3,7 @@ import '../firebase_auth_service.dart';
 import 'login_screen.dart';
 import 'main_screen.dart';
 import 'signup_email.dart';
-import '../screens/home_screen.dart';
+import 'home_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -17,7 +17,6 @@ class SignUpScreen extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            // Navigate to the MainScreen when the back arrow is pressed
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => MainScreen()),
@@ -68,22 +67,26 @@ class SignUpScreen extends StatelessWidget {
                   try {
                     final user = await _authService.signInWithGoogle();
                     if (user != null) {
-                      // Navigate to the HomeScreen after successful sign-in
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => HomeScreen(
-                              email: user.email!, userName: '', firstName: '', lastName: '',), // Pass email as a parameter
+                            email: user.email!,
+                            userName: '',
+                            firstName: '',
+                            lastName: '',
+                            phoneNumber: '',
+                            birthdate: '',
+                            sex: '',
+                          ),
                         ),
                       );
                     } else {
-                      // Show error message if user cancels sign-in
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Google sign in canceled.')),
                       );
                     }
                   } catch (e) {
-                    // Show error message on failure
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content:

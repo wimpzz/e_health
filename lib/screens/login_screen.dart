@@ -36,7 +36,7 @@ class LoginScreen extends StatelessWidget {
             LoginForm(),
             SizedBox(
               height: 20,
-            ), // Add some space between the login form and the register link
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -59,7 +59,7 @@ class LoginScreen extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 16,
-                      color: Colors.teal, // Adjust color as needed
+                      color: Colors.teal,
                     ),
                   ),
                 ),
@@ -182,22 +182,23 @@ class _LoginFormState extends State<LoginForm> {
                     _passwordController.text.trim(),
                   );
 
-                  final firstName = result['firstName'] as String;
+                  final userData = result['userData'] as Map<String, dynamic>;
 
-                  // Navigate to HomeScreen after successful login
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => HomeScreen(
-                        firstName: firstName,
-                        email: '',
-                        userName: '',
-                        lastName: '',
+                        email: userData['Email'] ?? '',
+                        userName: userData['UserName'] ?? '',
+                        firstName: userData['FirstName'] ?? '',
+                        lastName: userData['LastName'] ?? '',
+                        phoneNumber: userData['PhoneNumber'] ?? '',
+                        birthdate: userData['BirthDate'] ?? '',
+                        sex: userData['Sex'] ?? '',
                       ),
                     ),
                   );
                 } catch (_) {
-                  // Handle sign-in errors
                   _showAlertDialog(
                     context,
                     'Login Failed',
@@ -213,7 +214,7 @@ class _LoginFormState extends State<LoginForm> {
             ),
             style: ElevatedButton.styleFrom(
               minimumSize: Size(double.infinity, 50),
-              backgroundColor: Colors.teal, // Background color
+              backgroundColor: Colors.teal,
             ),
           ),
           SizedBox(height: 20),
@@ -222,7 +223,6 @@ class _LoginFormState extends State<LoginForm> {
               try {
                 final user = await _authService.signInWithGoogle();
                 if (user != null) {
-                  // Optionally, you can also fetch the first name from Firestore if needed
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -231,6 +231,9 @@ class _LoginFormState extends State<LoginForm> {
                         userName: '',
                         firstName: '',
                         lastName: '',
+                        phoneNumber: '',
+                        birthdate: '',
+                        sex: '',
                       ),
                     ),
                   );
@@ -240,7 +243,6 @@ class _LoginFormState extends State<LoginForm> {
                   );
                 }
               } catch (e) {
-                // Show error message on failure
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('Google sign in failed. Please try again.'),

@@ -26,8 +26,16 @@ class FirebaseAuthService {
     }
   }
 
-  Future<void> signUpWithEmailPassword(String email, String password,
-      String firstName, String lastName, String userName) async {
+  Future<void> signUpWithEmailPassword(
+    String email,
+    String password,
+    String firstName,
+    String lastName,
+    String userName,
+    String phoneNumber,
+    String birthDate,
+    String sex,
+  ) async {
     try {
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
@@ -36,7 +44,15 @@ class FirebaseAuthService {
       );
 
       await addUserToFirestore(
-          userCredential.user!.uid, email, firstName, lastName, userName);
+        userCredential.user!.uid,
+        email,
+        firstName,
+        lastName,
+        userName ?? 'NA',
+        phoneNumber ?? 'NA',
+        birthDate ?? 'NA',
+        sex ?? 'NA',
+      );
     } catch (e) {
       print('Failed to sign up: $e');
       throw Exception('Failed to sign up');
@@ -51,12 +67,10 @@ class FirebaseAuthService {
         password: password,
       );
 
-      // Retrieve user data from Firestore
       Map<String, dynamic> userData =
           await getUserData(userCredential.user!.uid);
 
-      // Return a map containing user object and user's firstName
-      return {'user': userCredential.user, 'firstName': userData['FirstName']};
+      return {'user': userCredential.user, 'userData': userData};
     } catch (e) {
       print('Failed to sign in: $e');
       throw Exception('Failed to sign in');
@@ -65,11 +79,10 @@ class FirebaseAuthService {
 
   Future<User?> signInWithGoogle() async {
     try {
-      await _auth.signOut(); // Sign out current user
+      await _auth.signOut();
 
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        // The user canceled the sign-in
         return null;
       }
 
@@ -83,18 +96,24 @@ class FirebaseAuthService {
       final UserCredential userCredential =
           await _auth.signInWithCredential(credential);
 
-      // Check if the user is new and add to Firestore if necessary
       if (userCredential.additionalUserInfo!.isNewUser) {
         List<String> nameParts = googleUser.displayName!.split(' ');
         String firstName = nameParts.first;
         String lastName = nameParts.length > 1 ? nameParts.last : '';
+        String sex = 'NA';
+        String phoneNumber = 'NA';
+        String birthDate = 'NA';
 
         await addUserToFirestore(
-            userCredential.user!.uid,
-            userCredential.user!.email!,
-            firstName,
-            lastName,
-            ''); // No username provided for Google sign-in
+          userCredential.user!.uid,
+          userCredential.user!.email!,
+          firstName,
+          lastName,
+          null,
+          phoneNumber,
+          birthDate,
+          sex,
+        );
       }
 
       return userCredential.user;
@@ -104,15 +123,25 @@ class FirebaseAuthService {
     }
   }
 
-  // Method to add user data to Firestore
-  Future<void> addUserToFirestore(String uid, String email, String firstName,
-      String lastName, String userName) async {
+  Future<void> addUserToFirestore(
+    String uid,
+    String email,
+    String firstName,
+    String lastName,
+    String? userName,
+    String phoneNumber,
+    String birthDate,
+    String sex,
+  ) async {
     try {
       await _firestore.collection('Users').doc(uid).set({
         'Email': email,
         'FirstName': firstName,
         'LastName': lastName,
-        'UserName': userName,
+        'UserName': userName ?? 'NA',
+        'Sex': sex ?? 'NA',
+        'PhoneNumber': phoneNumber ?? 'NA',
+        'BirthDate': birthDate ?? 'NA',
       });
     } catch (e) {
       print('Failed to add user to Firestore: $e');
@@ -123,7 +152,7 @@ class FirebaseAuthService {
   Future<void> signOut() async {
     try {
       await _auth.signOut();
-      await _googleSignIn.signOut(); // Sign out Google user as well
+      await _googleSignIn.signOut();
     } catch (e) {
       print('Failed to sign out: $e');
       throw Exception('Failed to sign out');

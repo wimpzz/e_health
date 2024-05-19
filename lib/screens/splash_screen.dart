@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'package:e_health/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'main_screen.dart';
+import 'login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -13,33 +16,35 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Navigate to the welcome screen after a delay
     Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const MainScreen()),
-      );
+      if (FirebaseAuth.instance.currentUser != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen(email: '', userName: '', firstName: '', lastName: '', phoneNumber: '', birthdate: '', sex: '',)),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+        );
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Set background color to white
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Image.asset(
-              'assets/logo.png', // Adjust the path to your logo image
-              width: 200, // Adjust width as needed
-              height: 200, // Adjust height as needed
+              'assets/logo.png',
+              width: 500,
+              height: 500,
             ),
             SizedBox(height: 20),
-            // Text(
-            //   'E-Health App',
-            //   style: Theme.of(context).textTheme.headline6,
-            // ),
           ],
         ),
       ),

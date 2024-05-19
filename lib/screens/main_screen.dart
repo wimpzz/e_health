@@ -4,7 +4,7 @@ import 'signup_email.dart';
 import 'signup_screen.dart';
 
 class MainScreen extends StatelessWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,17 +13,17 @@ class MainScreen extends StatelessWidget {
         leading: IconButton(
           icon: Image.asset('assets/logo.png'),
           onPressed: () {
-            // Add any action you want when the image icon is pressed
+            //func
           },
         ),
-        title: Text(
+        title: const Text(
           'E-Health',
           style: TextStyle(fontFamily: 'Poppins'),
         ),
         actions: [
           Builder(
             builder: (context) => IconButton(
-              icon: Icon(Icons.menu),
+              icon: const Icon(Icons.menu),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
@@ -36,47 +36,47 @@ class MainScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Spacer(),
+            const Spacer(),
             Image.asset(
               'assets/logo.png',
-              width: 200,
-              height: 200,
+              width: 500,
+              height: 500,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 20),
+              margin: const EdgeInsets.symmetric(horizontal: 20),
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SignUpScreen()),
+                    MaterialPageRoute(builder: (context) => const SignUpScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 50),
-                  textStyle: TextStyle(fontSize: 18, fontFamily: 'Poppins'),
+                  minimumSize: const Size(double.infinity, 50),
+                  textStyle: const TextStyle(fontSize: 18, fontFamily: 'Poppins'),
                 ),
-                child: Text('Register'),
+                child: const Text('Register'),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 20),
+              margin: const EdgeInsets.symmetric(horizontal: 20),
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                    MaterialPageRoute(builder: (context) => const LoginScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 50),
-                  textStyle: TextStyle(fontSize: 18, fontFamily: 'Poppins'),
+                  minimumSize: const Size(double.infinity, 50),
+                  textStyle: const TextStyle(fontSize: 18, fontFamily: 'Poppins'),
                 ),
-                child: Text('Sign In'),
+                child: const Text('Sign In'),
               ),
             ),
-            Spacer(),
+            const Spacer(),
           ],
         ),
       ),
@@ -84,7 +84,7 @@ class MainScreen extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.teal,
               ),
@@ -95,38 +95,38 @@ class MainScreen extends StatelessWidget {
               ),
             ),
             ListTile(
-              title: Text(
+              title: const Text(
                 'Register Using Email',
                 style: TextStyle(fontFamily: 'Poppins'),
               ),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SignUpEmailScreen()),
+                  MaterialPageRoute(builder: (context) => const SignUpEmailScreen()),
                 );
               },
             ),
             ListTile(
-              title: Text(
+              title: const Text(
                 'Register Using Gmail',
                 style: TextStyle(fontFamily: 'Poppins'),
               ),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SignUpScreen()),
+                  MaterialPageRoute(builder: (context) => const SignUpScreen()),
                 );
               },
             ),
             ListTile(
-              title: Text(
+              title: const Text(
                 'Login',
                 style: TextStyle(fontFamily: 'Poppins'),
               ),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
                 );
               },
             ),
